@@ -78,6 +78,7 @@ THIRD_APPS = [
 ]
 PROJECT_APPS = [
     'apps.base',
+    'apps.contas',
     'apps.pages',
 ]
 
@@ -160,6 +161,8 @@ DATABASES = {
 
 	}
 }
+
+AUTH_USER_MODEL = "contas.MyUser"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
