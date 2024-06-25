@@ -1,11 +1,16 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from apps.contas.forms import CustomUserCreationForm
 from django.contrib.auth.models import Group
 
+# TIMEOUT
 def timeout_view(request):
     return render(request, 'timeout.html')
+# LOGOUT
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 # login
 def login_view(request):
