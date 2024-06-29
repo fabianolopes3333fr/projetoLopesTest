@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from perfil.models import Perfil
 from contas.permissions import grupo_colaborador_required
 from contas.forms import CustomUserCreationForm, UserChangeForm
 from contas.models import MyUser
@@ -44,8 +45,11 @@ def register_view(request):
             usuario.is_valid = False
             usuario.save()
             
+            Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
+            
             group = Group.objects.get(name='usuario')
             usuario.groups.add(group)
+            
             
             messages.success(request, 'Registrado. Agora faça o login para começar!')
             return redirect('login')
