@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from perfil.forms import PerfilForm
 from perfil.models import Perfil
 from contas.permissions import grupo_colaborador_required
 from contas.forms import CustomUserCreationForm, UserChangeForm
@@ -61,7 +62,7 @@ def register_view(request):
     return render(request, "register.html",{"form": form})
 
 
-
+# Atualizar usuario
 @login_required()
 def atualizar_meu_usuario(request):
     if request.method == 'POST':
@@ -74,7 +75,7 @@ def atualizar_meu_usuario(request):
         form = UserChangeForm(instance=request.user, user=request.user)
     return render(request, 'user_update.html', {'form': form})
 
-
+# atualiza qualquer usuario pelo parametro username
 @login_required()
 @grupo_colaborador_required(['administrador','colaborador'])
 
@@ -89,3 +90,36 @@ def atualizar_usuario(request, username):
     else:
         form = UserChangeForm(instance=user, user=request.user)
     return render(request, 'user_update.html', {'form': form})
+
+# Lista todos usuarios do sistema
+@login_required
+@grupo_colaborador_required(['administrador','colaborador'])
+def lista_usuarios(request): # Lista Cliente 
+    lista_usuarios = MyUser.objects.select_related('perfil').filter(is_superuser=False) 
+    return render(request, 'lista-usuarios.html', {'lista_usuarios': lista_usuarios})
+
+
+@login_required
+@grupo_colaborador_required(['administrador','colaborador'])
+def adicionar_usuario(request):
+    user_form = CustomUserCreationForm()
+    perfil_form = PerfilForm()
+
+    if request.method == 'POST':
+        user_form = CustomUserCreationForm(request.POST)
+        perfil_form = PerfilForm(request.POST, request.FILES)
+
+        if user_form.is_valid() and perfil_form.is_valid():
+            # Salve o usuário
+            usuario = user_form.save()
+
+            # Crie um novo perfil para o usuário
+            perfil = perfil_form.save(commit=False)
+            perfil.usuario = usuario
+            perfil.save()
+ 
+            messages.success(request, 'Usuário adicionado com sucesso.')
+            return redirect('lista_usuarios')
+
+    context = {'user_form': user_form, 'perfil_form': perfil_form}
+    return render(request, "adicionar-usuario.html", context)
