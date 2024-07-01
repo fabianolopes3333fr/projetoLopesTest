@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from perfil.forms import PerfilForm
@@ -8,6 +8,8 @@ from perfil.models import Perfil
 from contas.permissions import grupo_colaborador_required
 from contas.forms import CustomUserCreationForm, UserChangeForm
 from contas.models import MyUser
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 
 
@@ -19,6 +21,26 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+
+# Mudança de Senha Force (first_login)
+@login_required
+def force_password_change_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.force_change_password = False # passa o parametro para False.
+            user.save()
+            update_session_auth_hash(request, user)
+            return redirect('password_change_done')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {'form': form}
+    return render(request, 'registration/password_force_change_form.html', context)
+
+
 # login
 def login_view(request):
     if request.method == 'POST':
@@ -27,7 +49,19 @@ def login_view(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            if user.is_authenticated and user.requires_password_change(): # Verifica
+                msg = 'Olá '+user.first_name+', como você pode perceber atualmente \
+	              a sua senha é 123 cadastrado. Recomendamos fortemente \
+	              que você altere sua senha para garantir a segurança da sua conta. \
+	              É importante escolher uma senha forte e única que não seja fácil de adivinhar. \
+	              Obrigado pela sua atenção!' 
+                messages.warning(request, msg)
+                return redirect('force_password_change') # Vai para rota de alterar senha.
+            else:
+                return redirect('home')
+            
+            
+           
         else:
             messages.error(request, 'Email ou senha inválidos')
     if request.user.is_authenticated:
@@ -40,7 +74,7 @@ def register_view(request):
     if request.user.is_authenticated:
         return redirect('home')
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, user=request.user)
         if form.is_valid():
             usuario = form.save(commit=False)
             usuario.is_valid = False
@@ -58,7 +92,7 @@ def register_view(request):
             # Tratar quando usuario já existe, senhas... etc...
             messages.error(request, 'A senha deve ter pelo menos 1 caractere maiúsculo, \
                 1 caractere especial e no minimo 8 caracteres.')
-    form = CustomUserCreationForm()
+    form = CustomUserCreationForm(user=request.user)
     return render(request, "register.html",{"form": form})
 
 
@@ -102,16 +136,19 @@ def lista_usuarios(request): # Lista Cliente
 @login_required
 @grupo_colaborador_required(['administrador','colaborador'])
 def adicionar_usuario(request):
-    user_form = CustomUserCreationForm()
-    perfil_form = PerfilForm()
+    user_form = CustomUserCreationForm(user=request.user)
+    perfil_form = PerfilForm(user=request.user)
 
     if request.method == 'POST':
-        user_form = CustomUserCreationForm(request.POST)
-        perfil_form = PerfilForm(request.POST, request.FILES)
+        user_form = CustomUserCreationForm(request.POST, user=request.user)
+        perfil_form = PerfilForm(request.POST, request.FILES, user=request.user)
 
         if user_form.is_valid() and perfil_form.is_valid():
             # Salve o usuário
             usuario = user_form.save()
+            
+            group = Group.objects.get(name='usuario')
+            usuario.groups.add(group)
 
             # Crie um novo perfil para o usuário
             perfil = perfil_form.save(commit=False)
@@ -120,6 +157,22 @@ def adicionar_usuario(request):
  
             messages.success(request, 'Usuário adicionado com sucesso.')
             return redirect('lista_usuarios')
+        else:
+            # erros
+            for field, error_list in user_form.errors.items():
+                for error in error_list:
+                    messages.error(request, f"Erro no campo '{user_form[field].label}': {error}")
+            
+            
+            for field, error_list in perfil_form.errors.items():
+                for error in error_list:
+                    messages.error(request, f"Erro no campo '{perfil_form[field].label}': {error}")
+            
+            # erros_list1 = user_form.errors.as_text()
+            # erros_list2 = perfil_form.errors.as_text()
+            # # voce pode fazer o que quiser com a lista de erros 
+            # messages.error(request, erros_list1)
+            # messages.error(request, erros_list2)
 
     context = {'user_form': user_form, 'perfil_form': perfil_form}
     return render(request, "adicionar-usuario.html", context)
