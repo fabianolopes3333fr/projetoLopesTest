@@ -24,6 +24,7 @@ urlpatterns = [
     path('contas/', include('contas.urls')), # url do app
     path('perfil/', include('perfil.urls')), # url do app
     path('config/', include('config.urls')),
+    path('forum/', include('forum.urls')),
     path('', include('pages.urls')), # url do app
 ]
 
