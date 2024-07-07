@@ -1,4 +1,6 @@
+import re
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from forum import models
 from base.utils import add_form_errors_to_messages
 from django.shortcuts import get_object_or_404, render, redirect
@@ -7,6 +9,8 @@ from django.contrib import messages
 
 # listas de postagem
 def lista_postagem_forum(request):
+    form_dict = {}
+    # Valida Rotas (Forum ou Dashboard)
     if request.path == '/forum/': # Pagina forum da home, mostrar tudo ativo.
         postagens = models.PostagemForum.objects.filter(ativo=True)
         template_view = 'lista-postagem-forum.html' # lista de post da rota /forum/
@@ -20,7 +24,13 @@ def lista_postagem_forum(request):
         else:
             # Usuário é do grupo usuário, pode ver apenas suas próprias postagens
             postagens = models.PostagemForum.objects.filter(usuario=user)
-    context = {'postagens': postagens}
+            
+        # Como existe uma lista de objetos, para aparecer o formulário 
+		# correspondente no modal precisamos ter um for
+    for el in postagens:
+        form = PostagemForumForm(instance=el) 
+        form_dict[el] = form
+    context = {'postagens': postagens, 'form_dict': form_dict}
     return render(request, template_view, context)
 
 # formulario de criacao de postagens
@@ -44,12 +54,17 @@ def criar_postagem_forum(request):
 # visualizacao de postagem
 def detalhe_postagem_forum(request, id):
     postagem = get_object_or_404(models.PostagemForum, id=id)
-    return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
+    form = PostagemForumForm(instance=postagem)
+    context = {'postagem': postagem, 'form': form}
+    return render(request, 'detalhe-postagem-forum.html', context)
 
 # Edita Postagem (ID)
 @login_required
 def editar_postagem_forum(request, id):
+    redirect_route = request.POST.get('redirect_route', '') # Adiciona
     postagem = get_object_or_404(models.PostagemForum, id=id)
+    message = 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!'
+    
     
     # Verifica se o usuário autenticado é o autor da postagem
     lista_grupos = ['administrador', 'colaborador']
@@ -63,22 +78,29 @@ def editar_postagem_forum(request, id):
         form = PostagemForumForm(request.POST, instance=postagem)
         if form.is_valid():
             form.save()
-            messages.warning(request, 'Seu Post '+ postagem.titulo +' \
-                foi atualizado com sucesso!')
-            return redirect('editar-postagem-forum', id=postagem.id)
+            messages.warning(request, message)
+            return redirect(redirect_route)
         else:
             add_form_errors_to_messages(request, form)
-    else:
-        form = PostagemForumForm(instance=postagem)
-    return render(request, 'form-postagem-forum.html', {'form': form})
+    return JsonResponse({'status': message}) # Coloca por enquanto.
 
 # deletar postagem
 
+
+
 @login_required 
 def deletar_postagem_forum(request, id): 
+    redirect_route = request.POST.get('redirect_route', '') # adiciono saber a rota que estamos
+    print(redirect_route)
     postagem = get_object_or_404(models.PostagemForum, id=id)
+    message = 'Seu Post '+postagem.titulo+' foi deletado com sucesso!' # atualizei a mesnagem aqui
     if request.method == 'POST':
         postagem.delete()
-        messages.error(request, 'Seu Post '+ postagem.titulo +' foi deletado com sucesso!')
-        return redirect('lista-postagem-forum')
-    return render(request, 'detalhe-postagem-forum.html', {'postagem': postagem})
+        messages.error(request, message)
+        
+        if re.search(r'/forum/detalhe-postagem-forum/([^/]+)/', redirect_route): # se minha rota conter
+            return redirect('lista-postagem-forum')
+        return redirect(redirect_route)
+
+    return JsonResponse({'status':message})
+    # return render(request, 'detalhe-postagem-form.html', {'postagem': postagem})
