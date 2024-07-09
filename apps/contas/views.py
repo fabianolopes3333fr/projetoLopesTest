@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -171,7 +172,11 @@ def atualizar_usuario(request, username):
 @grupo_colaborador_required(['administrador','colaborador'])
 def lista_usuarios(request): # Lista Cliente 
     lista_usuarios = MyUser.objects.select_related('perfil').filter(is_superuser=False) 
-    return render(request, 'lista-usuarios.html', {'lista_usuarios': lista_usuarios})
+    paginacao = Paginator(lista_usuarios, 5)
+    pagina_numero = request.GET.get("page")
+    page_obj = paginacao.get_page(pagina_numero)
+    context = {'page_obj': page_obj}
+    return render(request, 'lista-usuarios.html', context)
 
 
 @login_required
