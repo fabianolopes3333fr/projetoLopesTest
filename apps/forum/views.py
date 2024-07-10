@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from forum import models
-from base.utils import add_form_errors_to_messages
+from base.utils import add_form_errors_to_messages, filtrar_modelo
 from django.shortcuts import get_object_or_404, render, redirect
 from forum.forms import PostagemForumForm
 from django.contrib import messages  
@@ -11,6 +11,13 @@ from django.contrib import messages
 # listas de postagem
 def lista_postagem_forum(request):
     form_dict = {}
+    filtros = {}
+    
+    valor_busca = request.GET.get("titulo") # filtro de pesquisa no imput pesquisar
+    if valor_busca:
+        filtros["titulo"] = valor_busca
+        filtros["descricao"] = valor_busca
+        
     if request.path == '/forum/':
         postagens = models.PostagemForum.objects.filter(ativo=True)
         template_view = 'lista-postagem-forum.html'
@@ -21,7 +28,9 @@ def lista_postagem_forum(request):
             postagens = models.PostagemForum.objects.filter(ativo=True)
         else:
             postagens = models.PostagemForum.objects.filter(usuario=user)
-        
+    
+    postagens = filtrar_modelo(postagens, **filtros) 
+       
     for el in postagens:
         form = PostagemForumForm(instance=el) 
         form_dict[el] = form 
@@ -65,17 +74,17 @@ def criar_postagem_forum(request):
     return render(request, 'form-postagem-forum.html', {'form': form})
 
 # visualizacao de postagem
-def detalhe_postagem_forum(request, id):
-    postagem = get_object_or_404(models.PostagemForum, id=id)
+def detalhe_postagem_forum(request, slug):
+    postagem = get_object_or_404(models.PostagemForum, slug=slug)
     form = PostagemForumForm(instance=postagem)
     context = {'postagem': postagem, 'form': form}
     return render(request, 'detalhe-postagem-forum.html', context)
 
 # Edita Postagem (ID)
 @login_required
-def editar_postagem_forum(request, id):
+def editar_postagem_forum(request, slug):
     redirect_route = request.POST.get('redirect_route', '') # Adiciona
-    postagem = get_object_or_404(models.PostagemForum, id=id)
+    postagem = get_object_or_404(models.PostagemForum, slug=slug)
     message = 'Seu Post '+ postagem.titulo +' foi atualizado com sucesso!'
     
     
@@ -111,10 +120,10 @@ def editar_postagem_forum(request, id):
 
 
 @login_required 
-def deletar_postagem_forum(request, id): 
+def deletar_postagem_forum(request, slug): 
     redirect_route = request.POST.get('redirect_route', '') # adiciono saber a rota que estamos
     print(redirect_route)
-    postagem = get_object_or_404(models.PostagemForum, id=id)
+    postagem = get_object_or_404(models.PostagemForum, slug=slug)
     message = 'Seu Post '+postagem.titulo+' foi deletado com sucesso!' # atualizei a mesnagem aqui
     if request.method == 'POST':
         postagem.delete()
