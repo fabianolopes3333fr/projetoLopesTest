@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from .models import PostagemForum
+from . models import PostagemForum, PostagemForumComentario
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -22,16 +22,6 @@ class MultipleFileField(forms.FileField):
 class FileFieldForm(forms.Form):
     file_field = MultipleFileField()
     
-    
-    
-    
-class PostagemForumForm(forms.ModelForm):
-    data_publicacao = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d',attrs={'type': 'date'}))
-    postagem_imagens = MultipleFileField(label='Selecione no máximo 5 imagens.',required=False) # Adiciona isso
-
-    class Meta:
-        model = PostagemForum
-        fields = ['titulo', 'descricao', 'data_publicacao', 'ativo'] # remove anexar imagem
 
 class PostagemForumForm(forms.ModelForm):
     data_publicacao = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d',attrs={'type': 'date'})) 
@@ -48,3 +38,13 @@ class PostagemForumForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-check-input'
             else:
                 field.widget.attrs['class'] = 'form-control'
+                
+
+class PostagemForumComentarioForm(forms.ModelForm):
+    class Meta:
+        model = PostagemForumComentario
+        fields = ['comentario']
+        widgets = {
+            'comentario': forms.Textarea(
+                attrs={'class': 'form-control', 'rows': 3})
+        }              

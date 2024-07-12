@@ -20,7 +20,7 @@
                     <h2>{{postagem.titulo}}</h2>
                     <p>{{postagem.descricao}}</p>
                     {% for imagem in postagem.postagem_imagens.all %}
-                    
+
                     <a data-bs-toggle="modal" href="#imagemModal{{imagem.id}}" role="button"><i class="link-info fas fa-image fa-2x me-2"></i></a>
 
                     <!-- Modal -->
@@ -46,9 +46,46 @@
                     {% endfor %}
                 </div>
             </div>
+            {% include "comentarios/adicionar-comentario.html" %}
+            {% include "comentarios/lista-comentario.html" %}
         </div>
     </div>
 </div>
 {% include "modal-form-postagem-forum.html" %} <!--Adiciona-->
 {% include "modal-deletar-postagem-forum.html" %}
 {% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const formRemocao = document.getElementById("form-remocao");
+        const formRespRemocao = document.getElementById("form-resp-remocao");
+
+        //comentario
+        formRemocao.addEventListener("submit", function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            const confirmacao = confirm("Tem certeza de que deseja remover o comentário?");
+
+            if (confirmacao) {
+                // Se o usuário confirmar, envie o formulário
+                formRemocao.submit();
+            }
+        });
+
+        formRespRemocao.addEventListener("submit", function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            const confirmacao = confirm("Tem certeza de que deseja remover o comentário?");
+
+            if (confirmacao) {
+                // Se o usuário confirmar, envie o formulário
+                formRespRemocao.submit();
+            }
+        });
+
+
+    });
+
+</script>
+
+{% endblock scripts %}

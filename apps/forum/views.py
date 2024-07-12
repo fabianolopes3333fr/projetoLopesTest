@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from forum import models
 from base.utils import add_form_errors_to_messages, filtrar_modelo
 from django.shortcuts import get_object_or_404, render, redirect
-from forum.forms import PostagemForumForm
+from forum.forms import  PostagemForumComentarioForm, PostagemForumForm
 from django.contrib import messages  
 
 # listas de postagem
@@ -73,14 +73,20 @@ def criar_postagem_forum(request):
             add_form_errors_to_messages(request, form)
     return render(request, 'form-postagem-forum.html', {'form': form})
 
-# visualizacao de postagem
+# visualizacao de postagem (slug)
 def detalhe_postagem_forum(request, slug):
     postagem = get_object_or_404(models.PostagemForum, slug=slug)
     form = PostagemForumForm(instance=postagem)
-    context = {'postagem': postagem, 'form': form}
+    form_comentario = PostagemForumComentarioForm()
+    context = {
+        'postagem': postagem, 
+        'form': form,
+        'form_comentario':form_comentario
+               
+        }
     return render(request, 'detalhe-postagem-forum.html', context)
 
-# Edita Postagem (ID)
+# Edita Postagem (slug)
 @login_required
 def editar_postagem_forum(request, slug):
     redirect_route = request.POST.get('redirect_route', '') # Adiciona
@@ -116,9 +122,6 @@ def editar_postagem_forum(request, slug):
     return JsonResponse({'status': message}) # Coloca por enquanto.
 
 # deletar postagem
-
-
-
 @login_required 
 def deletar_postagem_forum(request, slug): 
     redirect_route = request.POST.get('redirect_route', '') # adiciono saber a rota que estamos
@@ -147,3 +150,56 @@ def remover_imagem(request):
         postagem_imagem.imagem.delete()
         postagem_imagem.delete()
     return JsonResponse({'message': 'Imagem removida com sucesso.'})
+
+
+""" 
+    Funcoes refernte a comentarios 
+"""
+def adicionar_comentario(request, slug):
+    postagem = get_object_or_404(models.PostagemForum, slug=slug)
+    message = 'Comentário Adcionado com sucesso!'
+    if request.method == 'POST':
+        form = PostagemForumComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.usuario = request.user
+            comentario.postagem = postagem
+            comentario.save() 
+            messages.warning(request, message)
+            return redirect('detalhe-postagem-forum', slug=postagem.slug)
+    return JsonResponse({'status': message})
+
+def editar_comentario(request, comentario_id):
+    comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
+    message = 'Comentário Editado com sucesso!'
+    if request.method == 'POST':
+        form = PostagemForumComentarioForm(request.POST, instance=comentario)
+        if form.is_valid():
+            form.save()
+            messages.info(request, message)
+            return redirect('detalhe-postagem-forum',
+                            slug=comentario.postagem.slug)
+    return JsonResponse({'status': message})
+
+def deletar_comentario(request, comentario_id):
+    comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
+    comentario.delete()
+    messages.success(request, 'Comentário deletado com sucesso!')
+    return redirect('detalhe-postagem-forum', slug=comentario.postagem.slug)
+
+
+def responder_comentario(request, comentario_id):
+    comentario = get_object_or_404(models.PostagemForumComentario, id=comentario_id)
+    if request.method == 'POST':
+        form = PostagemForumComentarioForm(request.POST)
+        message = 'Comentário Respondido com sucesso!'
+        if form.is_valid():
+            novo_comentario = form.save(commit=False)
+            novo_comentario.usuario = request.user
+            novo_comentario.parent_id = comentario_id
+            novo_comentario.postagem = comentario.postagem
+            novo_comentario.save()
+            messages.info(request, message)
+            return redirect('detalhe-postagem-forum',
+                            slug=comentario.postagem.slug)
+    return JsonResponse({'status': message})
