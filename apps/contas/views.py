@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from devis.models import Devis
 from base.utils import add_form_errors_to_messages
 from core import settings
 from perfil.forms import PerfilForm
@@ -14,8 +15,7 @@ from contas.models import MyUser
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 
-
-
+#---------------------------------------------------------------------
 # TIMEOUT
 def timeout_view(request):
     return render(request, 'timeout.html')
@@ -90,6 +90,7 @@ def register_view(request):
             usuario.groups.add(group)
             
             Perfil.objects.create(usuario=usuario) # Cria instancia perfil do usuário
+            Devis.objects.create(usuario=usuario) 
             
             # Envia e-mail para usuário
             send_mail( # Envia email para usuario

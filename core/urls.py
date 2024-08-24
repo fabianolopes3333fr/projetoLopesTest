@@ -25,6 +25,7 @@ urlpatterns = [
     path('perfil/', include('perfil.urls')), # url do app
     path('config/', include('config.urls')),
     path('forum/', include('forum.urls')),
+    path('devis/', include('devis.urls')),
     path('', include('pages.urls')), # url do app
 ]
 

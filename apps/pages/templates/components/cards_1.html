@@ -1,0 +1,53 @@
+{% load static %}
+{% if bc.bloco.nome == 'CARDS_1' %}
+<section class=" pa-64 ">
+    <div class="container py-lg-5 container1">
+        <div class="col-12 ">
+                <div class="row ">
+                    <div class="col-12 col-lg-7">
+                        <div class="contenu">
+                            <h2>Notre méthode&nbsp;<strong>pour des travaux en toute sérénité</strong></h2>
+                            <p>Vous avez un projet, mais ne savez pas par où commencer, quel artisan faire intervenir en premier, ou comment organiser votre chantier ? Depuis 2019, Lopes Peinture accompagne ses clients dans leur projet et développe des garanties afin de leur proposer des <strong>travaux de rénovation de qualité en toute sérénité.</strong></p>
+                            <h3>Quand vous pensez travaux, pensez Lopes Peinture !</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-5">
+                        <img width="280" height="280" src="{% static 'images/logo-500px-redondo.png' %}" alt="">
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        <div class="row justify-content-center pb-5">
+            <div class="col-md-12">
+                <h2 class="mb-3"><b>{{bc.titulo}}</b></h2>
+                <p>{{bc.descricao|default:""}}</p>
+            </div>
+        </div>
+        <div class=" row g-4">
+            {% for servico in bc.conteudo.all %} 
+            <div class="col-md-6 d-flex align-self-stretch">
+                <div class="d-flex gap-4">
+                    <div class="rounded text-white p-5 icin-box" style="background-color: {{servico.cor_label}}">
+                        <i class="icin {{servico.icone}}"></i>
+                        
+                    </div>
+                    <div class="media-body pl-md-4">
+                        <h3 class="text-dark text-decoration-none mb-3">{{servico.titulo_1}} <b class="bg-custon-t">{{servico.titulo_2}}</b></h3>
+                        <p>{{servico.descricao_1}}</p>
+                    </div>
+                </div>
+                {% if servico.titulo_botao_1 %}
+                            <a href="{% url ''|add:servico.rota_botao_1|add:'' %}" class="btn btn-primary py-3 px-4">{{servico.titulo_botao_1}}</a>
+                            {% endif %}
+                            {% if servico.titulo_botao_2 %}
+                            <a href="{% url ''|add:servico.rota_botao_2|add:'' %}" class="btn btn-primary py-3 px-4">{{servico.titulo_botao_2}}</a>
+                            {% endif %}
+            </div>
+            {% endfor %}
+                
+        </div>
+    </div>
+</section>
+{% endif %}

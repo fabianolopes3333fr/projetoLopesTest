@@ -1,0 +1,22 @@
+{% load static %}
+
+{% if bc.bloco.nome == 'CARDS_3' %}
+<section class="container1">
+    <div class="container text-center py-lg-5">
+        <div class="row justify-content-start pb-5">
+            <div class="col-md-8">
+                <h2 class=" border-bottom5 text-start">{{bc.titulo}}</h2>
+            </div>
+        </div>
+        <div class="row gap-4 ">
+            {% for especialidade in bc.conteudo.all %} 
+            <div class="col  pa-16 bg-light rounded-3 ">
+                <img src="{{especialidade.imagem.url}}" class="rounded-circle object-fit-cover" width="150" height="150" alt="">
+                <h3><a class="link-dark text-decoration-none" href="#">{{especialidade.titulo_1}}</a></h3>
+                <p>{{especialidade.descricao_1}}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

@@ -1,7 +1,7 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg bg-light" style="height: 70px;">
+<nav class="navbar navbar-expand-lg bg-light fixed-top box-shed-herder" style="height: 70px;">
     <div class="container-fluid bg-light">
-        <a class="navbar-brand" href="/"><img src="{% static 'images/logo-205-60px-black.png' %}" width="130" alt="" loading="lazy"/></a>
+        <img src="{{ logo.image.url }}" width="150" alt="{{ logo.title }}" title="{{ logo.title }}" class="logo">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -9,19 +9,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'lista-postagem-forum' %}">Forum (QA)</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">À propos</a>
+                    <a class="nav-link" href="{% url 'sobre' %}">À propos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="http://127.0.0.1:8000/admin/">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="{% url 'contato' %}">Contact</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">

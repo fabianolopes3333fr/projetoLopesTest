@@ -1,0 +1,120 @@
+.header {
+    background: url(../images/bg-home.png) no-repeat center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+}
+
+.img-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /*-----usado para redimensiona a imagem ao centro da div --*/
+    opacity: 0.5;
+    animation: zoom 25s;
+}
+
+
+
+.container-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.banner1 {
+    position: absolute;
+    top: 32%;
+    left: 9%;
+
+}
+
+.fonth1 {
+    font-size: 4.375rem;
+    color: var(--whit-blanc);
+    font-weight: 700;
+    font-family: var(--primarey-font);
+    text-shadow: rgb(0, 0, 0) 1px 1px 0px;
+    text-align: center;
+}
+
+.fontp1 {
+
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: var(--font_bTMGe_default);
+    text-shadow: rgb(0, 0, 0) 1px 1px 0px;
+    color: var(--whit-blanc);
+    background: #2C3E50;
+    background: -webkit-linear-gradient(to right, #FD746C, #2C3E50);
+    background: linear-gradient(to right, #FD746C, #2C3E50);
+    padding: 0.5rem 0.9rem;
+    border-radius: 5px;
+}
+
+.select-opt {
+    max-width: 800px;
+    padding: 10px;
+    background: #333333cc;
+    border: solid 1px #5a666e;
+    border-radius: 5px;
+
+}
+
+.opt-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+
+}
+
+.opt-container {
+    background: var(--whit-blanc);
+    font-family: var(--primarey-font);
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 12px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    margin-right: 10px;
+
+}
+
+.btn-1 {
+    color: var(--whit-blanc);
+    font-family: var(--primarey-font);
+    font-weight: 400;
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0.8rem 3rem;
+    border-radius: 5px;
+    transition: 0.3s ease;
+    background: rgba(91, 140, 40, 1);
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, rgba(91, 140, 40, 1), rgba(56, 100, 11, 1));
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, rgba(91, 140, 40, 1), rgba(56, 100, 11, 1));
+
+}
+
+.btn-1:hover {
+    background: rgba(90, 102, 110, 1);
+
+}

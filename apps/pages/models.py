@@ -37,12 +37,14 @@ class Conteudo(models.Model):
     
     descricao_1 = models.CharField(max_length=200, null=True, blank=True, help_text="Descrição mais curta até 200 caracteres")
     descricao_2 = models.TextField(null=True, blank=True, help_text="Descrição mais longa")
+    descricao_3 = models.CharField(max_length=200, null=True, blank=True, help_text="Descrição mais curta até 200 caracteres")
+    descricao_4 = models.TextField(null=True, blank=True, help_text="Descrição mais longa")
     
-    titulo_botao_1 = models.CharField(max_length=50, null=True, blank=True,help_text="Titulo do Botão 1")
-    rota_botao_1 = models.CharField(max_length=50, null=True, blank=True,help_text="Nome da Rota que configurou no urls.py")
+    titulo_botao_1 = models.CharField(max_length=250, null=True, blank=True,help_text="Titulo do Botão 1")
+    rota_botao_1 = models.CharField(max_length=400, null=True, blank=True,help_text="Nome da Rota que configurou no urls.py")
     
-    titulo_botao_2 = models.CharField(max_length=50, null=True, blank=True,help_text="Titulo do Botão 2")
-    rota_botao_2 = models.CharField(max_length=50, null=True, blank=True,help_text="Nome da Rota que configurou no urls.py")
+    titulo_botao_2 = models.CharField(max_length=250, null=True, blank=True,help_text="Titulo do Botão 2")
+    rota_botao_2 = models.CharField(max_length=400, null=True, blank=True,help_text="Nome da Rota que configurou no urls.py")
     
     class Meta:
         verbose_name = '2 - Conteúdo'
@@ -50,8 +52,7 @@ class Conteudo(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return '{} - {}'.format(self.nome,
-                                     self.titulo_1)
+        return '{} - {}'.format(self.nome,self.titulo_1)
         
 
 ## Modelo para criar varios blocos
@@ -63,6 +64,7 @@ class Blocos(models.Model):
     bloco = models.ForeignKey(TipoBloco, on_delete=models.CASCADE, related_name="bloco_conteudo", null=True) # Tipo de Bloco, SLIDE, BANNER_1, BANNER_2
     conteudo = models.ManyToManyField(Conteudo)
     ativo = models.BooleanField(default=True)
+    # nome_pagina = models.ManyToManyField(TipoBloco)
     
     class Meta:
         verbose_name = '3 - Blocos'
@@ -70,5 +72,16 @@ class Blocos(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return 'Pagina {} - {} - {}'.format(
-            self.pagina.nome, self.ordem, self.titulo)
+        return 'Pagina {} - {} - {}'.format(self.pagina.nome, self.ordem, self.titulo)
+        
+class Servico(models.Model):
+    nome = models.CharField(max_length=255)
+    descricao = models.TextField(blank=True)
+    
+    def __str__(self):
+         return self.nome
+    
+    class Meta:
+        verbose_name = '4 - Servicos '
+        verbose_name_plural = '4 - Servicos'
+        ordering = ['id']

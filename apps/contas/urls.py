@@ -12,4 +12,5 @@ urlpatterns = [
     path('lista-usuarios/', views.lista_usuarios, name='lista_usuarios'),
     path('adicionar-usuario/',  views.adicionar_usuario, name='adicionar_usuario'),
     path('nova-senha/', views.force_password_change_view, name='force_password_change'),
+   
 ]

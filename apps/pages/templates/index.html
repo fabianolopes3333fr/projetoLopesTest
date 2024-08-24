@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
-{% block title %}Pagina 1{% endblock %}
+{% block title %}Home | Lopes Peinture{% endblock %}
 {% block content %}
- {% for bc in blocos %}
- 	{% include "components/slide.html" %}
- 	{% include "components/banner_1.html" %}
- 	{% include "components/cards.html" %}
- 
- 
- 
- 
+
+{% comment %} {% include "components/main.html" %} {% endcomment %}
+
+{% for bc in blocos %}
+{% include "components/header.html" %}
+{% comment %} {% include "components/slide.html" %} {% endcomment %}
+{% include "components/banner_1.html" %}
+{% include "components/banner_2.html" %}
+{% include "components/banner_3.html" %}
+{% include "components/banner_4.html" %}
+{% include "components/cards_1.html" %} 
+{% include "components/cards_2.html" %} 
+{% include "components/cards_3.html" %} 
+{% include "components/footer.html" %} 
+{% include "components/contact.html" %} 
  {% endfor %}
+ 
+
+
+ 
 	
 {% endblock %}

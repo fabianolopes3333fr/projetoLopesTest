@@ -66,6 +66,7 @@ if not DEBUG:
 
 DJANGO_APPS = [
     'apps.contas',
+    'apps.devis',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -114,6 +115,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # Apps
                 'base.context_processors.context_social', 
+                'base.context_processors.get_logo', 
+                'base.context_processors.get_seo', 
+                'base.context_processors.get_ga_code', 
+                'base.context_processors.get_scripts', 
             ],
         },
     },

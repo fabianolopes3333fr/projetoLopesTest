@@ -40,7 +40,7 @@ class CustomUserCreationForm(forms.ModelForm):
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
         if len(password1) < 8:
-            raise forms.ValidationError("A senha deve conter pelo menos 8 caracteres.")
+            raise forms.ValidationError("Le mot de passe doit contenir au moins 8 caractères.")
 			
 	# Verifique se a senha contém pelo menos uma letra maiúscula, uma letra minúscula e um caractere especial
 
@@ -105,3 +105,7 @@ class UserChangeForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-check-input'
             else:
                 field.widget.attrs['class'] = 'form-control'
+                
+                
+# forms.py
+# classe nova --------------------------------------------------------

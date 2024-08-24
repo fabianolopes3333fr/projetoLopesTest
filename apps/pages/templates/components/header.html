@@ -1,0 +1,22 @@
+{% if bc.bloco.nome == 'HEADER' %}
+
+<header class="header margin-top-70">
+    <div class="container1">
+        <div class="container-wrapper">
+            {% for header in bc.conteudo.all %}
+            <h1 class="fonth1 mb-4">{{header.titulo_1}}</h1>
+            <p class="fontp1 mb-4">{{header.descricao_1}}</p>
+            {% endfor %}
+            <div class="select-opt">
+                <div class="opt-bg ">
+                    <div class="opt-container">
+                        Quels travaux souhaitez-vous réaliser ?
+                    </div>
+                    <button class="custon-btn1 " onclick="location.href='{% url 'devis' %}'">Demander un devis</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>
+{% endif %}

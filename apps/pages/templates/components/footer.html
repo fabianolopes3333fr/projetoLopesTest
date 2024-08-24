@@ -1,0 +1,117 @@
+{% load static %}
+{% if bc.bloco.nome == 'FOOTER' %}
+<footer>
+    {% for footer in bc.conteudo.all %}
+    <div class="flex column gradiente-1 ">
+        <div class=" container1 pa-64">
+            <div class="row justify-content-center col-12">
+                <div class="col-6">
+                    <h2 class="text-tittle-h2 text-color-gree">
+                        {{footer.titulo_1|default:""}}
+                        
+                    </h2>
+                </div>
+
+
+                <div class="col-6 col flex">
+                    <div class=" container-input-new border-2 border-opacity-10">
+                        <input class="custon-input1 a1724316990690x14005" type="input" placeholder="Votre e-mail">
+                        {% if footer.titulo_botao_1 %}
+                            <a href="{% url ''|add:footer.rota_botao_1|add:'' %}" class="custon-btn1">{{footer.titulo_botao_1}}</a>
+                        {% endif %}
+                        {% comment %} <button type="submit" class="custon-btn1 " onclick="location.href='{% url 'devis' %}'">S'ABONNER</button> {% endcomment %}
+
+                    </div>
+                    <div class="">
+                        <div class="container-input-new1">
+                            <div>
+                                <input class="input-chek" type="checkbox" id="1724316990702x14285">
+                            </div>
+                            <label for="1724316990702x14285"> En cliquant sur « S’abonner », j'accepte de recevoir par email la newsletter <b>LOPES PEINTURE.</b></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="margin-top-32">
+                <h4>Partager <i class="bi bi-send"></i></h4>
+                <div class="card-reso">
+                    <a title="réseau social" target="_blank" href=""><i class="bi bi-facebook"></i></a>
+                    <a title="réseau social" target="_blank" href="#"><i class="bi bi-instagram"></i></a>
+                    <a title="réseau social" target="_blank" href="#"><i class="bi bi-whatsapp"></i></a>
+                    <a title="réseau social" target="_blank" href="#"><i class="bi bi-twitter-x"></i></a>
+                     
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-foot b">
+        <div class="container1 ">
+            <div class=" tittle-foot  ">
+                <h2>"Nous avons choisi les meilleures entreprises pour développer nos travaux."</h2>
+            </div>
+            <div class="img-empres margin-top-64">
+                <img src="{% static 'images/logo-reca.svg' %}" alt="entreprise1">
+                <img src="{% static 'images/senhori.svg' %}" alt="entreprise1">
+                <img src="{% static 'images/logo.svg' %}" alt="entreprise1">
+            </div>
+        </div>
+    </div>
+    <div class="bg-foot footer">
+        <div class="container1">
+            <ul class="footer-container">
+                <li>
+                    <h2>Location</h2>
+                    <p>
+                        275 chemin de la castellane <br>
+                        Saint Sauveur <br>
+                        31790 - FR
+                    </p>
+                    <a rel="noopener noreferrer" target="_blank" href="https://storage.googleapis.com/maps-solutions-47ud95w1dg/locator-plus/dti2/locator-plus.html"><i class="bi bi-geo-alt"></i> Cliquez ici pour ouvrir sur la carte.</a>
+                </li>
+                <!--  -->
+                <li>
+                    <h2>Plan du site</h2>
+                    <ul class="mapa-do-site">
+                        <li><a href="./">- Home</a> </li>
+                        <li><a href="sobre.html">- Sobre</a> </li>
+                        <li><a href="passeios.html">- Passeios</a> </li>
+                        <li><a href="contato.html">- Contato</a> </li>
+                        <li><a href="trabale-conosco.html">- Trabalhe Conosco</a> </li>
+                    </ul>
+                </li>
+                <!--  -->
+                <li>
+                    <h2>Contactez-nous</h2>
+                    <ul class="footer-contato">
+                        <li><a aria-label="Chat on WhatsApp" href="https://wa.me//33634623320?text=Bienvenue sur notre WhatsApp, si vous avez des questions, n'hésitez pas à nous contacter."><i class="bi bi-whatsapp"></i> +33 6 3462-3320</a></li>
+                        <li><a href="mailto:contact@lopespeinture.fr"><i class="bi bi-envelope-arrow-up-fill"></i> contact@lopespeinture.fr</a></li>
+                    </ul>
+                </li>
+                <!--  -->
+                <li>
+                    <h2>Réseaux sociaux</h2>
+                    <ul class="rede-sociais">
+                        <li href="https://www.facebook.com"><a  rel="noopener noreferrer" title="facebook" href="https://www.facebook.com" target="_blank"><i class="bi bi-facebook"></i></a></li>
+                        <li><a rel="noopener noreferrer" title="instagram" href="https://www.instagram.com" target="_blank"><i class="bi bi-instagram"></i></a></li>
+                        <li><a rel="noopener noreferrer" title="whastapp" href="https://www.whatsapp.com" target="_blank"><i class="bi bi-whatsapp"></i></a></li>
+                        <li><a rel="noopener noreferrer" title="twitter" href="https://www.youtube.com" target="_blank"><i class="bi bi-twitter-x"></i></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+{%  endfor  %}
+</footer>
+<div class="copy">
+    <img src="{% static 'images/logo-220x80-P-preto.svg' %}" alt="">
+    <p>&copy; 2024 Lopes Peinture</p>
+</div>
+
+
+{% endif  %}
+
+

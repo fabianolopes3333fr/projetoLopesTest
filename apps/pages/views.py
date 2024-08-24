@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+from pages.models import Blocos, Servico
 
-from pages.models import Blocos
 
 
 def index(request):
@@ -13,6 +14,12 @@ def paginas_view(request):
         'sobre': Blocos.objects.filter(pagina__nome='sobre',ativo=True).order_by('ordem'),
         'faq': Blocos.objects.filter(pagina__nome='faq',ativo=True).order_by('ordem'),
         'contato': Blocos.objects.filter(pagina__nome='contato',ativo=True).order_by('ordem'),
+        'devis': Blocos.objects.filter(pagina__nome='devis',ativo=True).order_by('ordem'),
         }
     context = {'blocos': pagina[str(url_name)]}
     return render(request, 'index.html', context)
+
+
+def formulario_view(request):
+    servicos = Servico.objects.all()
+    return render(request, 'main.html', {'servicos': servicos})
